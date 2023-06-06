@@ -55,8 +55,7 @@ def addVerticalBarrier(tEvents, close, numDays=1):
     """
     t1 = close.index.searchsorted(tEvents + pd.Timedelta(days=numDays))
     t1 = t1[t1 < close.shape[0]] #removing times that are beyond those in consideration
-    t1 = (pd.Series(close.index[t1], index=tEvents[:t1.shape[0]]))
-    return t1
+    return (pd.Series(close.index[t1], index=tEvents[:t1.shape[0]]))
 
 
 def getEvents(close, tEvents, ptSl, trgt, minRet, numThreads, t1=False, side=None):
@@ -136,5 +135,3 @@ def dropLabels(events, minPct=.05):
     return events
 
 
-if __name__ == '__main__':
-    pass

@@ -43,9 +43,7 @@ class FractionalDifferentiation:
             weights_ = -weights[-1] * (diff_amt - k + 1) / k  # compute the next weight
             weights.append(weights_)
 
-        # Now, reverse the list, convert into a numpy column vector
-        weights = np.array(weights[::-1]).reshape(-1, 1)
-        return weights
+        return np.array(weights[::-1]).reshape(-1, 1)
 
     @staticmethod
     def frac_diff(series, diff_amt, thresh=0.01):
@@ -131,9 +129,7 @@ class FractionalDifferentiation:
             if ctr == lim - 1:  # if we have reached the size limit, exit the loop
                 break
 
-        # Now, reverse the list, convert into a numpy column vector
-        weights = np.array(weights[::-1]).reshape(-1, 1)
-        return weights
+        return np.array(weights[::-1]).reshape(-1, 1)
 
     @staticmethod
     def frac_diff_ffd(series, diff_amt, thresh=1e-5):

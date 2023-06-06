@@ -48,7 +48,7 @@ def train_valid_test_split(data, proportions='50:25:25'):
     features = [c for c in data.columns if c not in ('ret','bin')]
     n = len(data)
     borders = [float(p) for p in proportions.split(':')]
-    borders = borders / np.sum(borders)
+    borders /= np.sum(borders)
 
     train_ids = (0, int(np.floor(n * borders[0])))
     valid_ids = (train_ids[1] + 1, int(np.floor(n * np.sum(borders[:2]))))
@@ -153,14 +153,13 @@ def crossValPlot(skf,classifier,X_,y_):
     
     X = np.asarray(X_)
     y = np.asarray(y_)
-    
+
     tprs = []
     aucs = []
     mean_fpr = np.linspace(0, 1, 100)
-    
+
     f,ax = plt.subplots(figsize=(10,7))
-    i = 0
-    for train, test in skf.split(X, y):
+    for i, (train, test) in enumerate(skf.split(X, y)):
         probas_ = classifier.fit(X[train], y[train]).predict_proba(X[test])
         # Compute ROC curve and area the curve
         fpr, tpr, thresholds = roc_curve(y[test], probas_[:, 1])
@@ -170,8 +169,6 @@ def crossValPlot(skf,classifier,X_,y_):
         aucs.append(roc_auc)
         ax.plot(fpr, tpr, lw=1, alpha=0.3,
                  label='ROC fold %d (AUC = %0.2f)' % (i, roc_auc))
-
-        i += 1
 
     ax.plot([0, 1], [0, 1], linestyle='--', lw=2, color='r',
              label='Luck', alpha=.8)
@@ -222,5 +219,3 @@ def classifier_metrics(X,Y,c, confusion = True):
     plt.show()
 
 
-if __name__ == '__main__':
-    pass

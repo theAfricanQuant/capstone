@@ -208,7 +208,7 @@ class RSI(_Indicator):
         self.data['RSI'] = 100.0 - (100.0 / (1.0 + RS1))
         self._switch()
 
-        self.data.loc[(30 < self.data.RSI) & (self.data.RSI< 70),'side'] = 0
+        self.data.loc[(self.data.RSI > 30) & (self.data.RSI< 70), 'side'] = 0
 
     @staticmethod
     def _get_down_cross(df):
@@ -241,5 +241,3 @@ def rolling_autocorr(px, window=20, lag=1):
     .apply(lambda x: x.autocorr(lag=lag), raw=False), name = f'Autocor_{lag}_lag')
 
 
-if __name__ == '__main__':
-    pass

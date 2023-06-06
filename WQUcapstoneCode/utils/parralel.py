@@ -20,8 +20,7 @@ def mpPandasObj(func, pdObj, numThreads=8, mpBatches=1, linMols=True, **kargs):
 
     jobs = []
     for i in range(1, len(parts)):
-        job = {pdObj[0]: pdObj[1][parts[i - 1]:parts[i]], 'func': func}
-        job.update(kargs)
+        job = {pdObj[0]: pdObj[1][parts[i - 1]:parts[i]], 'func': func} | kargs
         jobs.append(job)
     if numThreads == 1:
         out = processJobs_(jobs)
@@ -46,7 +45,7 @@ def linParts(numAtoms,numThreads):
 def nestedParts(numAtoms,numThreads,upperTriang=False):
     # partition of atoms with an inner loop
     parts,numThreads_=[0],min(numThreads,numAtoms)
-    for num in range(numThreads_):
+    for _ in range(numThreads_):
         part=1+4*(parts[-1]**2+parts[-1]+numAtoms*(numAtoms+1.)/numThreads_)
         part=(-1+part**.5)/2.
         parts.append(part)
@@ -69,8 +68,7 @@ def expandCall(kargs):
     # Expand the arguments of a callback function, kargs['func']
     func=kargs['func']
     del kargs['func']
-    out=func(**kargs)
-    return out
+    return func(**kargs)
 
 
 #________________________________
@@ -79,8 +77,19 @@ def reportProgress(jobNum,numJobs,time0,task):
     msg=[float(jobNum)/numJobs, (time.time()-time0)/60.]
     msg.append(msg[1]*(1/msg[0]-1))
     timeStamp=str(dt.datetime.fromtimestamp(time.time()))
-    msg=timeStamp+' '+str(round(msg[0]*100,2))+'% '+task+' done after '+ \
-        str(round(msg[1],2))+' minutes. Remaining '+str(round(msg[2],2))+' minutes.'
+    msg = (
+        (
+            (
+                f'{timeStamp} {str(round(msg[0] * 100, 2))}% '
+                + task
+                + ' done after '
+                + str(round(msg[1], 2))
+            )
+            + ' minutes. Remaining '
+        )
+        + str(round(msg[2], 2))
+        + ' minutes.'
+    )
     if jobNum<numJobs:sys.stderr.write(msg+'\r')
     else:sys.stderr.write(msg+'\n')
     return
@@ -99,5 +108,3 @@ def processJobs(jobs,task=None,numThreads=24):
     return out
 	
 
-if __name__=='__main__':
-	pass

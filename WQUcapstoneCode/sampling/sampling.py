@@ -105,14 +105,10 @@ def plot_hist(bar_types,bar_returns):
 def jb(x,test=True):
     '''Jarque bera test (smaller - closer to normal) '''
     np.random.seed(1)
-    if test: return stats.jarque_bera(x)[0]
-    return stats.jarque_bera(x)[1]
+    return stats.jarque_bera(x)[0] if test else stats.jarque_bera(x)[1]
 
 def shapiro(x,test=True):
     '''Shapiro-Wilk Test (larger - closer to normal)'''
     np.random.seed(12345678)
-    if test: return stats.shapiro(x)[0]
-    return stats.shapiro(x)[1]
+    return stats.shapiro(x)[0] if test else stats.shapiro(x)[1]
 
-if __name__ == '__main__':
-    pass
